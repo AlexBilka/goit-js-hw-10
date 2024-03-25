@@ -1,0 +1,9 @@
+body .sl-overlay {
+  background: #2e2f42;
+}
+
+body .sl-wrapper .sl-navigation button,
+body .sl-wrapper .sl-counter,
+body .sl-wrapper .sl-close {
+  color: #ffffff;
+}
