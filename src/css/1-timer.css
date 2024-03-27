@@ -1,0 +1,29 @@
+.input-wrap {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+}
+
+.timer {
+  display: flex;
+  gap: 24px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-transform: uppercase;
+}
+
+.value {
+  font-size: 40px;
+}
+
+[type='button']:disabled {
+  background: #cfcfcf;
+}
+
+/* [type='text'] {
+  width: 280px;
+} */

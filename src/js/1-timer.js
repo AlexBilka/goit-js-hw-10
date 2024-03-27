@@ -1,4 +1,4 @@
-// підключення бібліотек
+// import modules
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 
@@ -8,8 +8,6 @@ import 'izitoast/dist/css/iziToast.min.css';
 // =======================================================
 
 let userSelectedDate;
-
-// =======================================================
 
 const startBtn = document.querySelector('button');
 const showTime = document.querySelectorAll('.value');
@@ -26,7 +24,7 @@ const options = {
     if (timeValid < 1) {
       iziToast.error({
         position: 'topCenter',
-        message: `Please choose a date in the future`,
+        message: 'Please choose a date in the future',
       });
       startBtn.disabled = true;
     } else {
@@ -36,25 +34,6 @@ const options = {
 };
 
 // =======================================================
-
-function convertMs(ms) {
-  // Number of milliseconds per unit of time
-  const second = 1000;
-  const minute = second * 60;
-  const hour = minute * 60;
-  const day = hour * 24;
-
-  // Remaining days
-  const days = Math.floor(ms / day);
-  // Remaining hours
-  const hours = Math.floor((ms % day) / hour);
-  // Remaining minutes
-  const minutes = Math.floor(((ms % day) % hour) / minute);
-  // Remaining seconds
-  const seconds = Math.floor((((ms % day) % hour) % minute) / second);
-
-  return { days, hours, minutes, seconds };
-}
 
 startBtn.disabled = true;
 
@@ -79,3 +58,26 @@ startBtn.addEventListener('click', event => {
     showTime[3].textContent = timer.seconds.toString().padStart(2, '0');
   }, 1000);
 });
+
+// =======================================================
+
+function convertMs(ms) {
+  // Number of milliseconds per unit of time
+  const second = 1000;
+  const minute = second * 60;
+  const hour = minute * 60;
+  const day = hour * 24;
+
+  // Remaining days
+  const days = Math.floor(ms / day);
+  // Remaining hours
+  const hours = Math.floor((ms % day) / hour);
+  // Remaining minutes
+  const minutes = Math.floor(((ms % day) % hour) / minute);
+  // Remaining seconds
+  const seconds = Math.floor((((ms % day) % hour) % minute) / second);
+
+  return { days, hours, minutes, seconds };
+}
+
+// =======================================================
