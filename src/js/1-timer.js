@@ -1,65 +1,88 @@
-// import modules
+// ================ import modules ================
+
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 
 import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
 
-// =======================================================
+// ================ global variables ================
 
+const inputDate = document.querySelector('#datetime-picker');
+const startBtn = document.querySelector('[data-start]');
+const timerValue = document.querySelectorAll('.value');
+
+startBtn.disabled = true;
 let userSelectedDate;
 
-const startBtn = document.querySelector('button');
-const showTime = document.querySelectorAll('.value');
-const inputTime = document.querySelector('#datetime-picker');
+// ================ flatpickr module initialization ================
 
-const options = {
+flatpickr(inputDate, {
   enableTime: true,
   time_24hr: true,
   defaultDate: new Date(),
   minuteIncrement: 1,
   onClose(selectedDates) {
     userSelectedDate = selectedDates[0];
-    const timeValid = userSelectedDate - new Date();
-    if (timeValid < 1) {
-      iziToast.error({
-        position: 'topCenter',
-        message: 'Please choose a date in the future',
-      });
-      startBtn.disabled = true;
-    } else {
-      startBtn.disabled = false;
-    }
+    checkDate();
   },
-};
+});
 
-// =======================================================
+// ================ selected date VALIDATION ================
 
-startBtn.disabled = true;
+function checkDate() {
+  const validDate = userSelectedDate.getTime() - Date.now();
+  if (validDate < 1) {
+    iziToast.error({
+      position: 'topRight',
+      message: 'Please choose a date in the future',
+    });
+    startBtn.disabled = true;
+  } else {
+    startBtn.disabled = false;
+  }
+}
 
-flatpickr('#datetime-picker', options);
+// ================ 'START' button event ================
 
-startBtn.addEventListener('click', event => {
+startBtn.addEventListener('click', startTimer);
+
+function startTimer() {
   const intervalId = setInterval(() => {
-    let timeInterval = userSelectedDate - new Date();
-
+    let timeInterval = userSelectedDate.getTime() - Date.now();
     if (timeInterval < 1) {
       clearInterval(intervalId);
       return;
     }
-    startBtn.disabled = true;
-    inputTime.disabled = true;
 
-    const timer = convertMs(timeInterval);
+    if (timeInterval >= 60 * 1000 * 10) {
+      timeInterval += 60 * 60 * 1000; // compensation for the lost hour
+    }
 
-    showTime[0].textContent = timer.days.toString().padStart(2, '0');
-    showTime[1].textContent = timer.hours.toString().padStart(2, '0');
-    showTime[2].textContent = timer.minutes.toString().padStart(2, '0');
-    showTime[3].textContent = timer.seconds.toString().padStart(2, '0');
+    startBtn.disabled = true; // elements is disabled
+    if (timeInterval > 1000) {
+      inputDate.disabled = true;
+    } else {
+      inputDate.disabled = false;
+    }
+
+    const timerToMs = convertMs(timeInterval);
+
+    for (let i = 0; i < timerValue.length; i += 1) {
+      timerValue[i].textContent = addLeadingZero(
+        timerToMs[Object.keys(timerToMs)[i]] // add values to the markup
+      );
+    }
   }, 1000);
-});
+}
 
-// =======================================================
+// ================ formating values to '00' ================
+
+function addLeadingZero(value) {
+  return value.toString().padStart(2, '0');
+}
+
+// ================ convert DATE to MS ================
 
 function convertMs(ms) {
   // Number of milliseconds per unit of time
