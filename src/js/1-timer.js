@@ -55,9 +55,9 @@ function startTimer() {
       return;
     }
 
-    if (timeInterval >= 60 * 1000 * 10) {
-      timeInterval += 60 * 60 * 1000; // compensation for the lost hour
-    }
+    // if (timeInterval >= 60 * 1000 * 10) {
+    //   timeInterval += 60 * 60 * 1000; // compensation for the lost hour
+    // }
 
     startBtn.disabled = true; // elements is disabled
     if (timeInterval > 1000) {
