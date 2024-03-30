@@ -22,8 +22,9 @@
 
 [type='button']:disabled {
   background: #cfcfcf;
+  cursor: default;
 }
 
-/* [type='text'] {
-  width: 280px;
-} */
+.flatpickr-input[readonly]:disabled {
+  cursor: default;
+}
