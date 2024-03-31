@@ -1,52 +1,53 @@
 // ============= import modules =============
+
 import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
 
-// ==========================================
+// ============= document elements =============
 
 const form = document.querySelector('.form');
 form.addEventListener('submit', createPromise);
+
+// ============= event function =============
 
 function createPromise(event) {
   event.preventDefault();
 
   const state = form.state.value;
-  const delay = parseInt(form.delay.value);
-
-  // ============= validation of the delay value ==============
-  if (isNaN(delay) || delay <= 0) {
-    iziToast.error({
-      title: 'Error',
-      message: 'Please enter a valid positive number for the delay',
-      position: 'topLeft',
-    });
-    return;
-  }
+  const delay = parseInt(form.delay.value); // Nan if invalid
 
   // ============= create promise ==============
-  try {
-    new Promise((resolve, reject) => {
+
+  if (delay) {
+    const promise = new Promise((resolve, reject) => {
       setTimeout(() => {
         if (state === 'fulfilled') {
-          resolve(
-            iziToast.success({
-              title: 'Resolve',
-              message: `✅ Fulfilled promise in ${delay}ms`,
-              position: 'topRight',
-            })
-          );
-        } else {
-          reject(
-            iziToast.error({
-              title: 'Reject',
-              message: `❌ Rejected promise in ${delay}ms`,
-              position: 'topLeft',
-            })
-          );
+          resolve(delay);
+        } else if (state === 'rejected') {
+          reject(delay);
         }
       }, delay);
     });
-  } catch (error) {
-    console.error('Error:', error);
+
+    // ============= processing of promise value ==============
+
+    promise
+      .then(delay => {
+        iziToast.success({
+          title: 'Success',
+          message: `✅ Fulfilled promise in ${delay}ms`,
+          position: 'topRight',
+        });
+      })
+
+      .catch(delay => {
+        iziToast.error({
+          title: 'Error',
+          message: `❌ Rejected promise in ${delay}ms`,
+          position: 'topRight',
+        });
+      });
   }
+
+  event.currentTarget.reset(); // reset input value
 }
